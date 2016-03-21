@@ -1,6 +1,6 @@
 # TPUnit
 
-ThinkPHP PHPUnit框架集成
+ThinkPHP PHPUnit框架集成，基于TP3.2，建议PHP 5.4以上环境。
 
 ## 1. 初始配置
 
