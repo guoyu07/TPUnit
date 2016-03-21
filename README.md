@@ -24,5 +24,21 @@ ThinkPHP PHPUnit框架集成
 
 ## 3. 支持的特性
 
-* 基本的Unit
-* DBUnit
+### 3.1 基本的Unit
+
+最经典的例子：
+
+参看上面的参考配置文档中：[基于Netbeans的PHPUnit环境配置](http://www.cnblogs.com/x3d/p/phpunit-in-netbeans8.html)
+
+### 3.2 DBUnit
+
+参看本项目demo目录 /demo/Application/Common/Model/UrlModelTest.php 文件。
+
+DBUnit主要由四种断言构成，目前已支持TP对这四种断言的支持：
+
+* 对表中数据行的数量作出断言
+* 对表的状态作出断言
+* 对查询的结果作出断言
+* 对多个表的状态作出断言
+
+具体请查看<https://github.com/web3d/TPUnit/blob/master/demo/Application/Common/Model/UrlModelTest.php>
