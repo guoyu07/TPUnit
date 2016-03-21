@@ -42,3 +42,5 @@ DBUnit主要由四种断言构成，目前已支持TP对这四种断言的支持
 * 对多个表的状态作出断言
 
 具体请查看<https://github.com/web3d/TPUnit/blob/master/demo/Application/Common/Model/UrlModelTest.php>
+
+其中，{{%url}} 是从Yii2框架中引入的表名前缀替换方案，{{和}}是表名界定符，%是表名前缀占位符。
