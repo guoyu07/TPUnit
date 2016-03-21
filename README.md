@@ -14,6 +14,7 @@ ThinkPHP PHPUnit框架集成，基于TP3.2，建议PHP 5.4以上环境。
 
   * [基于Netbeans的PHPUnit环境配置](http://www.cnblogs.com/x3d/p/phpunit-in-netbeans8.html)
   * ```git clone git@github.com:web3d/TPUnit.git```  到ThinkPHP的Vendor目录下
+  * 给ThinkPHP框架打补丁 将Think\Think类的start方法最后一行改为 ```!constant('NO_NEED_RUN_APP') && App::run();```
 
 
 ## 2. 开始
@@ -28,13 +29,13 @@ ThinkPHP PHPUnit框架集成，基于TP3.2，建议PHP 5.4以上环境。
 
 ## 3. 支持的特性
 
-### 3.1 基本的Unit
+### 3.1 基本的UnitTest
 
 最经典的例子：
 
 参看上面的参考配置文档中：[基于Netbeans的PHPUnit环境配置](http://www.cnblogs.com/x3d/p/phpunit-in-netbeans8.html)
 
-### 3.2 DBUnit
+### 3.2 DB UnitTest
 
 参看本项目demo目录 /demo/Application/Common/Model/UrlModelTest.php 文件。
 
