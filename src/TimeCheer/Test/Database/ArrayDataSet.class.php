@@ -28,7 +28,7 @@ class ArrayDataSet extends \PHPUnit_Extensions_Database_DataSet_AbstractDataSet
                 $columns = array_keys($rows[0]);
             }
 
-            $metaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData($tableName, $columns);
+            $metaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(C('DB_PREFIX') . $tableName, $columns);
             $table = new \PHPUnit_Extensions_Database_DataSet_DefaultTable($metaData);
 
             foreach ($rows AS $row) {

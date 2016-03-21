@@ -24,6 +24,14 @@ class UrlModelTest extends TestCase
                 ['url' => 'http://www.baidu.com', 'create_time' => time()],
                 ['url' => 'http://www.baidux.com', 'create_time' => time()],
             ],
+            'channel' => [
+                ['id' => 1, 'pid' => 0, 'title' => 'channel 1', 'create_time' => time(), 'status' => 1],
+                ['id' => 2, 'pid' => 1, 'title' => 'channel 2', 'create_time' => time(), 'status' => 1],
+                ['id' => 3, 'pid' => 1, 'title' => 'sub channel 1', 'create_time' => time(), 'status' => 1],
+                ['id' => 4, 'pid' => 1, 'title' => 'sub channel 2', 'create_time' => time(), 'status' => 1],
+                ['id' => 5, 'pid' => 2, 'title' => 'sub channel 3', 'create_time' => time(), 'status' => 1],
+                ['id' => 6, 'pid' => 2, 'title' => 'sub channel 4', 'create_time' => time(), 'status' => 0],
+            ],
         ]);
     }
     
@@ -35,7 +43,7 @@ class UrlModelTest extends TestCase
         $this->assertEquals(2, $this->getConnection()->getRowCount('url'), "Pre-Condition");
 
         $model = M('url');
-        $model->add(['url' => 'http://www.163.com', 'create_time' => time()]);
+        $model->add(['url' => 'http://x3d.pw', 'create_time' => time()]);
 
         $this->assertEquals(3, $model->count(), "Inserting failed");
     }
@@ -47,13 +55,13 @@ class UrlModelTest extends TestCase
     {
         
         $model = M('url');
-        $model->add(['url' => 'http://www.163.com', 'create_time' => time()]);
+        $model->add(['url' => 'http://x3d.pw', 'create_time' => time()]);
         
         $queryTable = $this->getConnection()->createQueryTable(
-                'url', 'SELECT id, url FROM wp_url'
+                'url', 'SELECT id, url FROM {{%url}}'
         );
 
-        $expectedTable = $this->createFlatXmlDataSet(TEST_ROOT . "/data/expected_url.xml")
+        $expectedTable = $this->createFlatXmlDataSet(TEST_ROOT . "/data/expected/url_inserted.xml")
                               ->getTable("url");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
@@ -64,10 +72,11 @@ class UrlModelTest extends TestCase
     public function testComplexQuery()
     {
         $queryTable = $this->getConnection()->createQueryTable(
-            'myComplexQuery', 'SELECT complexQuery...'
+            'url_channel', 'SELECT u.id AS url_id, u.url, c.title, c.pid FROM {{%url}} u '
+                . 'LEFT JOIN {{%channel}} c ON u.id=c.id'
         );
-        $expectedTable = $this->createFlatXmlDataSet("complexQueryAssertion.xml")
-                              ->getTable("myComplexQuery");
+        $expectedTable = $this->createFlatXmlDataSet(TEST_ROOT . "/data/expected/urlchannel.xml")
+                              ->getTable("url_channel");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
     
@@ -77,8 +86,15 @@ class UrlModelTest extends TestCase
      */
     public function testCreateDataSetAssertion()
     {
-        $dataSet = $this->getConnection()->createDataSet(array('guestbook'));
-        $expectedDataSet = $this->createFlatXmlDataSet('guestbook.xml');
+        //尚未实现TP表名前缀逻辑 所以不能用下面的写法
+        //$dataSet = $this->getConnection()->createDataSet(array('url'));
+        
+        //暂时只实现下面这种通过db创建dataset的方式
+        $dataSet = new \TimeCheer\Test\Database\DataSet\QueryDataSet($this->getConnection());
+        $dataSet->addTable('url'); // additional tables
+        
+        $dataSet->addTable('channel'); // additional tables
+        $expectedDataSet = $this->createFlatXmlDataSet(TEST_ROOT . '/data/expected/url_manual.xml');
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
     
@@ -88,11 +104,26 @@ class UrlModelTest extends TestCase
      */
     public function testManualDataSetAssertion()
     {
-        $dataSet = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet();
-        $dataSet->addTable('guestbook', 'SELECT id, content, user FROM guestbook'); // additional tables
-        $expectedDataSet = $this->createFlatXmlDataSet('guestbook.xml');
-
+        $dataSet = new \TimeCheer\Test\Database\DataSet\QueryDataSet($this->getConnection());
+        $dataSet->addTable('url', 'SELECT id, url FROM {{%url}}'); // additional tables
+        $expectedDataSet = $this->createFlatXmlDataSet(TEST_ROOT . '/data/expected/url_manual.xml');
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
+    }
+    
+    /**
+     * 过滤表字段
+     * 从数据库连接建立数据库数据集，并将其与基于文件的数据集进行比较
+     */
+    public function testDataSetFilter()
+    {
+        $dataSet = new \TimeCheer\Test\Database\DataSet\QueryDataSet($this->getConnection());
+        
+        $dataSet->addTable('url'); // additional tables
+        $filterDataSet = new \PHPUnit_Extensions_Database_DataSet_DataSetFilter($dataSet);
+        $filterDataSet->setExcludeColumnsForTable('url', array('short', 'create_time', 'status'));
+        
+        $expectedDataSet = $this->createFlatXmlDataSet(TEST_ROOT . '/data/expected/url_manual.xml');
+        $this->assertDataSetsEqual($expectedDataSet, $filterDataSet);
     }
 
 }

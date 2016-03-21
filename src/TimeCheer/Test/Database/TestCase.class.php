@@ -36,7 +36,7 @@ abstract class TestCase extends \PHPUnit_Extensions_Database_TestCase
             if (self::$pdo == null) {
                 self::$pdo = new \PDO(C('DB_TYPE') . ':host=' . C('DB_HOST') . ';port='.C('DB_PORT').';dbname=' . C('DB_NAME'), C('DB_USER'), C('DB_PWD'));
             }
-            $this->conn = $this->createDefaultDBConnection(self::$pdo, C('DB_NAME'));
+            $this->conn = new Connection(self::$pdo, C('DB_NAME'));
         }
 
         return $this->conn;
