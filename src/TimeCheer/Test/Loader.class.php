@@ -25,8 +25,6 @@ class Loader
      */
     protected $suffix = '.classTest';
 
-    const PREFIX = 'TimeCheer\OAO\UnitTest\\';
-
     /**
      * 构造函数
      * @param string $dir 手动指定起始目录
@@ -66,7 +64,7 @@ class Loader
      */
     public function autoload($class)
     {
-        if (0 !== strpos($class, self::PREFIX)) {
+        if (0 !== strpos($class, $this->prefix)) {
             return false;
         }
 
