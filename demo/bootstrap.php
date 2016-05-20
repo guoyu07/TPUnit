@@ -45,6 +45,7 @@ define('NO_NEED_RUN_APP', true);
  * ThinkPHP亦可移动到WEB以外的目录
  */
 require SITE_PATH . '/ThinkPHP/ThinkPHP.php';
+\Think\App::init();
 
 require VENDOR_PATH . '/TimeCheer/Test/AutoLoader.class.php';
 \TimeCheer\Test\AutoLoader::register();
